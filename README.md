@@ -79,13 +79,11 @@ This Power BI report consists of **three pages**, each offering a different angl
 
 ## 📁 Repository Structure
 
-
-/AdventureWorks-Dashboard/
-│
-├── AdventureWorks Dashboard.pbix # Power BI Report file
-├── README.md # Project documentation
-└── /data/ # (Optional) Scripts or raw data extracts
-
+/AdventureWorks-Dashboard/<br>
+│<br>
+├── AdventureWorks Dashboard.pbix   # Power BI Report file<br>
+├── README.md                       # Project documentation<br>
+└── /data/                          # (Optional) Scripts or raw data extracts<br>
 
 ---
 
