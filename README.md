@@ -79,3 +79,33 @@ This Power BI report consists of **three pages**, each offering a different angl
 
 ## 📁 Repository Structure
 
+/AdventureWorks-Dashboard/
+│
+├── AdventureWorks Dashboard.pbix # Power BI Report file
+├── README.md # Project documentation
+└── /data/ # (Optional) Scripts or raw data extracts
+
+---
+
+## ✅ Requirements
+
+- Power BI Desktop (latest version)
+- AdventureWorks DW database (2014+)
+- Optional: SQL Server (for direct database queries)
+
+---
+
+## 📬 Feedback & Contributions
+
+Feel free to open an [issue](https://github.com/your-repo/issues) or submit a [pull request](https://github.com/your-repo/pulls) if you have ideas, suggestions, or improvements.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+
+
