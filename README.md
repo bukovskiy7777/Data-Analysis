@@ -1,7 +1,6 @@
 # 🚴 AdventureWorks Power BI Dashboard
 
 [![Power BI](https://img.shields.io/badge/Built%20with-Power%20BI-yellow?logo=powerbi&logoColor=white)](https://powerbi.microsoft.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![AdventureWorks](https://img.shields.io/badge/Data-AdventureWorks-blue?logo=microsoftsqlserver)](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure)
 
 > **A comprehensive interactive sales dashboard based on the Microsoft AdventureWorks sample database.**
@@ -40,6 +39,8 @@ This Power BI report consists of **three pages**, each offering a different angl
 - Filters by region, store, and store type
 - Profitability by product model
 
+![screen1](screenshots/1.png)
+
 ---
 
 ### 2. 🚴 Products Overview
@@ -52,6 +53,8 @@ This Power BI report consists of **three pages**, each offering a different angl
 - Model-level revenue breakdown (e.g., Mountain-200, Road-250)
 - Profitability, costs, AOV, and quantity sold per subcategory
 - Filterable by region, store, model, and more
+
+![screen2](screenshots/2.png)
 
 ---
 
@@ -66,24 +69,26 @@ This Power BI report consists of **three pages**, each offering a different angl
 - Profit margin comparison for discounted vs. full-price products
 - Top discounted models and subcategories
 
+![screen3](screenshots/3.png)
+
 ---
 
 ## 🛠 Technologies Used
 
 - [Power BI Desktop](https://powerbi.microsoft.com/)
 - [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/)
-- [AdventureWorks DW 2014](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure)
+- [AdventureWorks DW 2022](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure)
 - DAX / M / SQL (data modeling and transformation)
 
 ---
 
 ## 📁 Repository Structure
 
-/AdventureWorks-Dashboard/<br>
+/AdventureWorks/<br>
 │<br>
 ├── AdventureWorks Dashboard.pbix   # Power BI Report file<br>
 ├── README.md                       # Project documentation<br>
-└── /data/                          # (Optional) Scripts or raw data extracts<br>
+└── /sql/                           # Sql query to the database<br>
 
 ---
 
@@ -92,18 +97,6 @@ This Power BI report consists of **three pages**, each offering a different angl
 - Power BI Desktop (latest version)
 - AdventureWorks DW database (2014+)
 - Optional: SQL Server (for direct database queries)
-
----
-
-## 📬 Feedback & Contributions
-
-Feel free to open an [issue](https://github.com/your-repo/issues) or submit a [pull request](https://github.com/your-repo/pulls) if you have ideas, suggestions, or improvements.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 
