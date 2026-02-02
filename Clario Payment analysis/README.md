@@ -48,6 +48,13 @@
 
 *Очікуваний результат:* Дашборди у BI-інструменті або скріншоти з поясненням.
 
+<img width="1378" height="735" alt="image" src="https://github.com/user-attachments/assets/204cab83-3f11-42d9-b38c-2ff5787b03e7" /> 
+<br /> <br />
+<img width="1399" height="766" alt="image" src="https://github.com/user-attachments/assets/b82810d3-abb4-4cf5-91c2-503a85e12bb0" />
+<br /> <br />
+<img width="1399" height="878" alt="image" src="https://github.com/user-attachments/assets/fcedc3ed-8ed5-4ebe-a035-aa4c0b842309" />
+<br /> <br />
+
 ### **3. Аналітика та рекомендації**
 
 На основі отриманих даних:
