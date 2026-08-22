@@ -1,0 +1,62 @@
+2a. Database Schema Rationale
+
+The database schema (macro_analytics) is designed using relational DWH best practices, focusing on data integrity, normal form standards, and optimal query performance for BI tools.
+
+Table Structure & Constraints:
+
+- exchange_rates: Stores exchange rates with a UNIQUE constraint on (rate_date, base_currency, target_currency) to prevent duplicate rate entries for any given day.
+
+- gdp and population tables: Structured as fact tables storing annual historical data. Both enforce UNIQUE constraints on (country, year) to maintain entity integrity.
+
+- dim_country_currency: Serves as a dimension lookup table mapping countries to their native ISO currency codes and alpha-2 codes.
+
+Precision & Data Types Choice:
+
+- Financial Figures (DECIMAL(18, 6) and DECIMAL(20, 2)): Floating-point types (FLOAT/DOUBLE) were deliberately avoided for financial figures due to IEEE 754 rounding inaccuracies. DECIMAL guarantees exact fixed-point mathematical operations.
+
+- Demographics (BIGINT): Used for population values to prevent integer overflow for high-population countries while avoiding decimals.
+
+- Domain Validation (CHECK Constraints): Explicit checks ensure logical boundaries (e.g., rate > 0, population >= 0, year BETWEEN 1900 AND 2100).
+
+
+
+
+2b. Financial & Economic Logic Assumptions
+
+Currency Exchange Baseline:
+
+- The primary storage currency for macro indicators (gdp_in_usd) is US Dollars (USD), providing a universal baseline.
+
+- Dynamic currency conversion is calculated using annual rates (as of December 31 of each year) aggregated from daily API rates:
+{Converted GDP} = {GDP USD} x {Exchange Rate}
+
+Population Aggregation Logic:
+
+- Demographic data is non-additive across time. Summing population across multiple years yields misleading totals. To solve this in Power BI, the population metric evaluates the latest available year within the active filter context (Population Latest), ensuring accurate totals in matrix headers and global summaries.
+
+Per Capita Calculation:
+
+- GDP per capita (population data evaluated for the latest available year) is computed at the Power BI level, taking into account the calculation context (filters): {GDP per Capita USD} = {GDP USD} / {Population Latest}
+
+
+
+
+2c. Automation & ETL Architecture Recommendations
+
+Scheduled Pipeline Orchestration (Apache Airflow):
+
+- Deploy an Airflow DAG running daily.
+
+- Task 1: Extract daily rates from Exchange Rates API.
+
+- Task 2: Staging validation (Great Expectations (or similar) to verify API payloads).
+
+- Task 3: Insert data into exchange_rates using "ON DUPLICATE KEY UPDATE".
+
+Database Views & Power BI Service:
+
+- Pre-aggregate daily currency rates into an annual average view/table (view_annual_exchange_rates) inside MySQL to reduce Power BI DAX computation overhead.
+
+- Publish the dashboard to Power BI Service.
+
+- Configure an On-Premises Data Gateway linked to the MySQL instance with scheduled refreshes aligned with the Airflow pipeline execution.
