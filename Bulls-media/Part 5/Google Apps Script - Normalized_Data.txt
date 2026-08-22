@@ -1,0 +1,120 @@
+function normalizeWebsiteSessions() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sourceSheet = ss.getSheetByName("Initial_Data");
+  let targetSheet = ss.getSheetByName("Normalized_Data");
+  
+  // If there is no sheet for normalized data, create it
+  if (!targetSheet) {
+    targetSheet = ss.insertSheet("Normalized_Data");
+  } else {
+    targetSheet.clear();
+  }
+  
+  const rawData = sourceSheet.getDataRange().getValues();
+  const headers = rawData[0];
+  
+  // Headers for the new normalized table
+  const newHeaders = [
+    "Timestamp", "User ID", "Session ID", "Traffic Source", "Device Type", 
+    "Country", "City", "Step Index", "Page Name", "Clicks", "Scrolls", 
+    "Time Spent (sec)", "Cart Changes", "Conversion Event", "Purchase Value"
+  ];
+  
+  const normalizedRows = [newHeaders];
+
+  // Helper function to standardize Traffic Source values
+  function cleanTrafficSource(source) {
+    if (!source) return "Unknown";
+    const str = String(source).trim();
+    if (str === "PaidAds") return "Paid Ads";
+    if (str === "Organic") return "Organic Search";
+    return str;
+  }
+  
+  // Helper function to standardize Device Type values
+  function cleanDeviceType(device) {
+    if (!device) return "Unknown";
+    const str = String(device).trim();
+    
+    // Map short abbreviations to full names
+    if (str === "D" || str.toLowerCase() === "desktop") return "Desktop";
+    if (str === "M" || str.toLowerCase() === "mobile") return "Mobile";
+    if (str === "T" || str.toLowerCase() === "tablet") return "Tablet";
+    
+    return str;
+  }
+  
+  // We go through each row of data (skipping the header)
+  for (let i = 1; i < rawData.length; i++) {
+    const row = rawData[i];
+    
+    const timestamp = row[0];
+    const userId = row[1];
+    const sessionId = row[2];
+    const trafficSource = cleanTrafficSource(row[3]);
+    const deviceType = cleanDeviceType(row[4]);
+    const country = row[5];
+    const city = row[6];
+    
+    // Parsing columns with arrays (H, I, J)
+    let pages = [];
+    let interactions = [];
+    let times = [];
+    
+    try {
+      // Cleaning and parsing Browsing Path ['P1', 'P2'] -> Array
+      let pathStr = String(row[7]).replace(/'/g, '"');
+      pages = JSON.parse(pathStr);
+    } catch(e) { pages = [String(row[7])]; }
+    
+    try {
+      // Page Interaction [{"Clicks": 5, "Scrolls": 6}, ...]
+      let interStr = String(row[8]);
+      interactions = JSON.parse(interStr);
+    } catch(e) { interactions = []; }
+    
+    try {
+      // Time per Page [36, 93, 108]
+      let timeStr = String(row[9]);
+      times = JSON.parse(timeStr);
+    } catch(e) { times = []; }
+    
+    const cartChanges = row[10];
+    const conversionEvent = row[11];
+    const purchaseValue = row[12];
+    
+    // Create a separate line for each step on the page
+    for (let step = 0; step < pages.length; step++) {
+      const pageName = pages[step] || "Unknown";
+      
+      // Extract Clicks and Scrolls from a JSON element
+      const interObj = interactions[step] || {};
+      const clicks = interObj["Clicks"] !== undefined ? interObj["Clicks"] : 0;
+      const scrolls = interObj["Scrolls"] !== undefined ? interObj["Scrolls"] : 0;
+      
+      const timeSpent = times[step] !== undefined ? times[step] : 0;
+      
+      normalizedRows.push([
+        timestamp,
+        userId,
+        sessionId,
+        trafficSource,
+        deviceType,
+        country,
+        city,
+        step + 1, // Step Index (1, 2, 3...)
+        pageName,
+        clicks,
+        scrolls,
+        timeSpent,
+        cartChanges,
+        conversionEvent,
+        purchaseValue
+      ]);
+    }
+  }
+  
+  // write the result on a new sheet
+  targetSheet.getRange(1, 1, normalizedRows.length, normalizedRows[0].length).setValues(normalizedRows);
+  SpreadsheetApp.getUi().alert("Data successfully normalized into 'Normalized_Data' sheet!");
+}

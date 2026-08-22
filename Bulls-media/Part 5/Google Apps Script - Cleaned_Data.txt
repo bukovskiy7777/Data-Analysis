@@ -1,0 +1,59 @@
+function cleanSessionLevelData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sourceSheet = ss.getSheetByName("Initial_Data");
+  let targetSheet = ss.getSheetByName("Cleaned_Data");
+  
+  // Create target sheet if it doesn't exist, otherwise clear existing content
+  if (!targetSheet) {
+    targetSheet = ss.insertSheet("Cleaned_Data");
+  } else {
+    targetSheet.clear();
+  }
+  
+  const rawData = sourceSheet.getDataRange().getValues();
+  const headers = rawData[0];
+  const cleanedRows = [headers];
+  
+  // Helper function to standardize Traffic Source values
+  function cleanTrafficSource(source) {
+    if (!source) return "Unknown";
+    const str = String(source).trim();
+    if (str === "PaidAds") return "Paid Ads";
+    if (str === "Organic") return "Organic Search";
+    return str;
+  }
+  
+  // Helper function to standardize Device Type values
+  function cleanDeviceType(device) {
+    if (!device) return "Unknown";
+    const str = String(device).trim();
+    
+    // Map short abbreviations to full names
+    if (str === "D" || str.toLowerCase() === "desktop") return "Desktop";
+    if (str === "M" || str.toLowerCase() === "mobile") return "Mobile";
+    if (str === "T" || str.toLowerCase() === "tablet") return "Tablet";
+    
+    return str;
+  }
+  
+  // Process rows without unnesting arrays
+  for (let i = 1; i < rawData.length; i++) {
+    const row = rawData[i];
+    if (!row[2]) continue; // Skip empty rows without Session ID
+    
+    // Create a copy of the original row
+    let cleanedRow = [...row];
+    
+    // Apply data cleaning logic to specific columns
+    cleanedRow[3] = cleanTrafficSource(row[3]); // Column D: Traffic Source
+    cleanedRow[4] = cleanDeviceType(row[4]);     // Column E: Device Type
+    
+    cleanedRows.push(cleanedRow);
+  }
+  
+  // Write cleaned data to the target sheet
+  if (cleanedRows.length > 0) {
+    targetSheet.getRange(1, 1, cleanedRows.length, cleanedRows[0].length).setValues(cleanedRows);
+    SpreadsheetApp.getUi().alert("Session-level data successfully cleaned! Total sessions: " + (cleanedRows.length - 1));
+  }
+}
