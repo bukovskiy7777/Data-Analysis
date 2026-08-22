@@ -1,0 +1,10 @@
+{
+    "API_KEY": "u6IndtGf0NjnDGM5wf79pkKRGnkmDGyB",
+    "DB_CONFIG": {
+        "host": "localhost",
+        "user": "db_user",
+        "password": "password",
+        "database": "macro_analytics",
+        "port": 3306
+    }
+}
